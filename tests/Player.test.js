@@ -1,22 +1,24 @@
+import expect from "expect";
 import { Gameboard } from "../src/Gameboard.js";
 import { Player } from "../src/Player.js";
 import { Ship } from "../src/Ship.js";
+import { jest } from "@jest/globals";
 
 test("creates a player with a gameboard", () => {
-    const player = Player();
+    const player = Player("human");
 
     expect(player.gameboard).toBeDefined();
 });
 
 test("player can attack enemy gameboard", () => {
-    const player = Player();
+    const player = Player("human");
     const enemy = Gameboard();
 
     expect(player.attack(enemy, [2,4])).toBe("Water");
 });
 
 test("player can attack enemy ship", () => {
-    const player = Player();
+    const player = Player("human");
     const enemy = Gameboard();
     const ship = Ship(3);
 
@@ -24,4 +26,75 @@ test("player can attack enemy ship", () => {
 
     expect(player.attack(enemy, [2,4])).toBe("Hit");
     expect(ship.hits).toBe(1);
+});
+
+test("player can be created as computer", () => {
+    const player = Player("computer");
+    
+    expect(player.type).toBe("computer");
+});
+
+test("player can be created as human", () => {
+    const player = Player("human");
+    
+    expect(player.type).toBe("human");
+});
+
+test("can control Math.random", () => {
+    const randomSpy = jest.spyOn(Math, "random");
+    randomSpy.mockReturnValue(0.5);
+
+    expect(Math.random()).toBe(0.5)
+    
+    randomSpy.mockRestore();
+});
+
+test("computer can generate a random attack", () => {
+    const player = Player("computer");
+    const enemy = Gameboard();
+    const ship = Ship(1);
+
+    const randomSpy = jest.spyOn(Math, "random");
+    randomSpy.mockReturnValue(0.5);
+
+    enemy.placeShip(ship, [5, 5], "horizontal");
+    player.randomAttack(enemy);
+
+    expect(ship.hits).toBe(1);
+    expect(enemy.attacked[5][5]).toBe(true);
+
+    randomSpy.mockRestore();
+});
+
+test("computer avoids attacking an already attacked cell", () => {
+    const player = Player("computer");
+    const enemy = Gameboard();
+    enemy.attacked[5][5] = true;
+
+    const randomSpy = jest.spyOn(Math, "random");
+    randomSpy
+    .mockReturnValueOnce(0.5)
+    .mockReturnValueOnce(0.5)
+    .mockReturnValueOnce(0.6)
+    .mockReturnValueOnce(0.6);
+
+    player.randomAttack(enemy);
+    expect(enemy.attacked[6][6]).toBe(true);
+
+    randomSpy.mockRestore();
+});
+
+test("human player cannot use random attacks", () => {
+    const player = Player("human");
+    const enemy = Gameboard();
+
+    expect(() => {
+        player.randomAttack(enemy);
+    }).toThrow("Forbidden function for humans");
+});
+
+test("doesn't allow invalid player types", () => {
+    expect(() => {
+        Player("root");
+    }).toThrow("Invalid player type");
 });

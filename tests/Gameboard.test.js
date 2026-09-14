@@ -1,5 +1,5 @@
-import { Gameboard } from "../src/Gameboard";
-import { Ship } from "../src/Ship";
+import { Gameboard } from "../src/Gameboard.js";
+import { Ship } from "../src/Ship.js";
 
 test("creates a 10x10 gameboard", () => {
     const gameboard = Gameboard();

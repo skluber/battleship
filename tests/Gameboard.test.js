@@ -58,3 +58,54 @@ test("checks supported orientations", () => {
         gameboard.placeShip(ship, [2, 2], "diagonal");
     }).toThrow("Orientation is not supported");
 }) 
+
+test("hits a ship when attacked", () => {
+    const gameboard = Gameboard();
+    const ship = Ship(3)
+
+    gameboard.placeShip(ship, [2, 4], "vertical");
+
+    expect(gameboard.receiveAttack([2, 4])).toBe("Hit");
+    expect(ship.hits).toBe(1);
+}) 
+
+test("returns Water when attacking an empty cell ", () => {
+    const gameboard = Gameboard();
+
+    expect(gameboard.receiveAttack([2, 4])).toBe("Water");
+}) 
+
+test("attacking out of bounds (vertical)", () => {
+    const gameboard = Gameboard();
+
+    expect(() => {
+        gameboard.receiveAttack([1,10]);
+    }).toThrow("Out of bounds");
+}) 
+
+test("attacking out of bounds (horizontal)", () => {
+    const gameboard = Gameboard();
+
+    expect(() => {
+        gameboard.receiveAttack([10,1]);
+    }).toThrow("Out of bounds");
+}) 
+
+test("hits a ship that was already attacked", () => {
+    const gameboard = Gameboard();
+    const ship = Ship(3);
+
+    gameboard.placeShip(ship, [2, 4], "vertical");
+    gameboard.receiveAttack([2,4]);
+
+    expect(gameboard.receiveAttack([2,4])).toBe("Already attacked");
+    expect(ship.hits).toBe(1);
+}) 
+
+test("hits water that was already attacked", () => {
+    const gameboard = Gameboard();
+
+    gameboard.receiveAttack([2,4]);
+
+    expect(gameboard.receiveAttack([2,4])).toBe("Already attacked");
+}) 

@@ -10,6 +10,8 @@ const Gameboard = () => {
             return Array(10).fill(false);
         }),
 
+        ships: [],
+
         placeShip(ship, [x, y], orientation) {
             if (ship.length <= 0) return;
             if (ship.length + x > 10 && orientation === "horizontal") throw new Error("Ship is out of board");
@@ -31,6 +33,8 @@ const Gameboard = () => {
                     this.cells[y + i][x] = ship;
                 }
             }
+
+            this.ships.push(ship);
         },
 
         receiveAttack([x, y]) {
@@ -46,6 +50,11 @@ const Gameboard = () => {
                 this.cells[y][x].hit();
                 return "Hit";
             }
+        },
+
+        isAllSunk(){
+            if (this.ships.length === 0) return false;
+            return this.ships.every(ship => ship.isSunk());
         }
     }
 }

@@ -23,3 +23,14 @@ test("ship gests sunk when hits reach its length", () => {
 
     expect(ship.isSunk()).toBe(true);
 });
+
+test("ship never gets more hits than its own length", () => {
+    const ship = Ship(3);
+
+    ship.hit();
+    ship.hit();
+    ship.hit();
+    ship.hit();
+
+    expect(ship.hits).toBe(3);
+});

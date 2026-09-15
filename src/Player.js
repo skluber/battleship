@@ -22,7 +22,7 @@ const Player = (type) => {
             return enemy.receiveAttack([x,y]);
         },
 
-        randomAttack(enemy){
+        randomAttack(enemy) {
             if (this.type === "human") throw new Error("Forbidden function for humans");
 
             let result = null;
@@ -34,6 +34,30 @@ const Player = (type) => {
                 result = this.attack(enemy, [x, y]);
 
             } while (result === "Already attacked");
+        },
+
+        randomPlaceShips() {
+            
+            const orientations = ["horizontal", "vertical"];
+            
+            
+            this.fleet.forEach((boat) => {
+                let placed = false;
+
+                while (!placed) {
+                    const x = Math.floor(Math.random() * 10);
+                    const y = Math.floor(Math.random() * 10);
+                    const randomIndex = Math.floor(Math.random() * orientations.length);
+
+                    try {
+                        this.gameboard.placeShip(boat, [x, y], orientations[randomIndex]);
+                        placed = true;
+                    } catch {
+                        placed = false;
+                    }
+                }
+            });
+
         }
     };
 };

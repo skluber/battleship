@@ -108,3 +108,15 @@ test("a player is created with his independent fleet (5 boats)", () => {
     expect(humanPlayer.fleet[0].length).toBe(5);
     expect(humanPlayer.fleet[0]).not.toBe(computerPlayer.fleet[0]);
 });
+
+test("places the entire fleet randomly on the gameboard", () => {
+    const humanPlayer = Player("human");
+    humanPlayer.randomPlaceShips();
+
+    const flatBoard = humanPlayer.gameboard.cells.flat();
+    const totalBoatCells = flatBoard.filter(cell => cell !== null).length;
+
+    // All boats means 17 not null cells
+    expect(totalBoatCells).toBe(17)
+
+});

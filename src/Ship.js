@@ -1,7 +1,8 @@
 export { Ship };
 
-const Ship = (length) => {
+const Ship = (name, length) => {
     return {
+        name, 
         length,
         hits: 0,
 

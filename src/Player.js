@@ -1,4 +1,6 @@
 import { Gameboard } from "./Gameboard.js";
+import { fleet } from "./fleet.js";
+import { Ship } from "./Ship.js";
 
 export { Player };
 
@@ -7,9 +9,14 @@ const Player = (type) => {
         throw new Error("Invalid player type");
     }
 
+    const playerFleet = fleet.map((boat) => {
+        return Ship(boat.name, boat.length)
+    }) 
+
     return {
         gameboard: Gameboard(),
         type,
+        fleet: playerFleet,
 
         attack(enemy, [x,y]) {
             return enemy.receiveAttack([x,y]);

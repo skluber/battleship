@@ -10,7 +10,7 @@ test("creates a 10x10 gameboard", () => {
 
 test("places a ship horizontally", () => {
     const gameboard = Gameboard();
-    const ship = Ship(3)
+    const ship = Ship("destroyer", 3)
 
     gameboard.placeShip(ship, [2, 4], "horizontal");
 
@@ -21,7 +21,7 @@ test("places a ship horizontally", () => {
 
 test("places a ship vertically", () => {
     const gameboard = Gameboard();
-    const ship = Ship(3)
+    const ship = Ship("destroyer", 3)
 
     gameboard.placeShip(ship, [2, 4], "vertical");
 
@@ -32,7 +32,7 @@ test("places a ship vertically", () => {
 
 test("doesn't place a ship out of board", () => {
     const gameboard = Gameboard();
-    const ship = Ship(3)
+    const ship = Ship("destroyer", 3)
 
     expect(() => {
         gameboard.placeShip(ship, [2, 8], "vertical")
@@ -41,8 +41,8 @@ test("doesn't place a ship out of board", () => {
 
 test("doesn't place a ship on an occupied position", () => {
     const gameboard = Gameboard();
-    const ship = Ship(3)
-    const ship2 = Ship(3)
+    const ship = Ship("destroyer", 3)
+    const ship2 = Ship("destroyer", 3)
 
     expect(() => {
         gameboard.placeShip(ship, [2, 2], "vertical");
@@ -52,7 +52,7 @@ test("doesn't place a ship on an occupied position", () => {
 
 test("checks supported orientations", () => {
     const gameboard = Gameboard();
-    const ship = Ship(3)
+    const ship = Ship("destroyer", 3)
 
     expect(() => {
         gameboard.placeShip(ship, [2, 2], "diagonal");
@@ -61,7 +61,7 @@ test("checks supported orientations", () => {
 
 test("hits a ship when attacked", () => {
     const gameboard = Gameboard();
-    const ship = Ship(3)
+    const ship = Ship("destroyer", 3)
 
     gameboard.placeShip(ship, [2, 4], "vertical");
 
@@ -93,7 +93,7 @@ test("attacking out of bounds (horizontal)", () => {
 
 test("hits a ship that was already attacked", () => {
     const gameboard = Gameboard();
-    const ship = Ship(3);
+    const ship = Ship("destroyer", 3);
 
     gameboard.placeShip(ship, [2, 4], "vertical");
     gameboard.receiveAttack([2,4]);
@@ -112,7 +112,7 @@ test("hits water that was already attacked", () => {
 
 test("returns false when there are unsunk ships", () => {
     const gameboard = Gameboard();
-    const ship = Ship(3);
+    const ship = Ship("destroyer", 3);
 
     gameboard.placeShip(ship, [2, 4], "vertical");
     gameboard.receiveAttack([2,4]);
@@ -122,7 +122,7 @@ test("returns false when there are unsunk ships", () => {
 
 test("returns true when all ships are sunk", () => {
     const gameboard = Gameboard();
-    const ship = Ship(3);
+    const ship = Ship("destroyer", 3);
 
     gameboard.placeShip(ship, [2, 4], "vertical");
     gameboard.receiveAttack([2,4]);

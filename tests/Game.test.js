@@ -37,7 +37,7 @@ test("game is not over at the start", () => {
 
 test("human destroys computer ship and becomes the winner", () => {
     const game = Game();
-    const ship = Ship(1);
+    const ship = Ship("destroyer", 1);
 
     game.computerPlayer.gameboard.placeShip(ship, [2, 2], "horizontal");
     game.computerPlayer.gameboard.receiveAttack([2, 2]);
@@ -47,7 +47,7 @@ test("human destroys computer ship and becomes the winner", () => {
 
 test("computer destroys human ship and becomes the winner", () => {
     const game = Game();
-    const ship = Ship(1);
+    const ship = Ship("destroyer", 1);
 
     game.humanPlayer.gameboard.placeShip(ship, [2, 2], "horizontal");
     game.humanPlayer.gameboard.receiveAttack([2, 2]);

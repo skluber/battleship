@@ -20,7 +20,7 @@ test("player can attack enemy gameboard", () => {
 test("player can attack enemy ship", () => {
     const player = Player("human");
     const enemy = Gameboard();
-    const ship = Ship(3);
+    const ship = Ship("destroyer", 3);
 
     enemy.placeShip(ship, [2,4], "horizontal");
 
@@ -52,7 +52,7 @@ test("can control Math.random", () => {
 test("computer can generate a random attack", () => {
     const player = Player("computer");
     const enemy = Gameboard();
-    const ship = Ship(1);
+    const ship = Ship("destroyer", 1);
 
     const randomSpy = jest.spyOn(Math, "random");
     randomSpy.mockReturnValue(0.5);
@@ -97,4 +97,14 @@ test("doesn't allow invalid player types", () => {
     expect(() => {
         Player("root");
     }).toThrow("Invalid player type");
+});
+
+test("a player is created with his independent fleet (5 boats)", () => {
+    const humanPlayer = Player("human");
+    const computerPlayer = Player("computer");
+
+    expect(humanPlayer.fleet).toHaveLength(5);
+    expect(humanPlayer.fleet[0].hits).toBe(0);
+    expect(humanPlayer.fleet[0].length).toBe(5);
+    expect(humanPlayer.fleet[0]).not.toBe(computerPlayer.fleet[0]);
 });

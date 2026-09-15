@@ -6,6 +6,8 @@ const Game = () => {
     const humanPlayer = Player("human");
     const computerPlayer = Player("computer");
 
+    computerPlayer.randomPlaceShips();
+
     return {
         humanPlayer,
         computerPlayer,

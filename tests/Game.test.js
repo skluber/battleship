@@ -1,5 +1,6 @@
 import { Game } from "../src/Game.js";
-import { Ship } from "../src/Ship.js";
+import { jest } from "@jest/globals";
+import { Player } from "../src/Player.js";
 
 test("creates a game with two players", () => {
     const game = Game();
@@ -35,22 +36,45 @@ test("game is not over at the start", () => {
     expect(game.getWinner()).toBe(null);
 });
 
-test("human destroys computer ship and becomes the winner", () => {
+test("human wins when all computer ships are sunk", () => {
     const game = Game();
-    const ship = Ship("destroyer", 1);
 
-    game.computerPlayer.gameboard.placeShip(ship, [2, 2], "horizontal");
-    game.computerPlayer.gameboard.receiveAttack([2, 2]);
+    jest.spyOn(game.computerPlayer.gameboard, "isAllSunk").mockReturnValue(true);
 
     expect(game.getWinner()).toBe(game.humanPlayer);
 });
 
-test("computer destroys human ship and becomes the winner", () => {
+test("computer wins when all human ships are sunk", () => {
     const game = Game();
-    const ship = Ship("destroyer", 1);
 
-    game.humanPlayer.gameboard.placeShip(ship, [2, 2], "horizontal");
-    game.humanPlayer.gameboard.receiveAttack([2, 2]);
+    jest.spyOn(game.humanPlayer.gameboard, "isAllSunk").mockReturnValue(true);
 
     expect(game.getWinner()).toBe(game.computerPlayer);
+});
+
+test("computer player starts with all ships placed, human with none", () => {
+    const game = Game();
+
+    const flatBoard = game.computerPlayer.gameboard.cells.flat();
+    const occupiedCells = flatBoard.filter(cell => cell !== null).length;
+
+    expect(occupiedCells).toBe(17);
+
+    const humanBoard = game.humanPlayer.gameboard.cells.flat();
+    const humanOccupiedCells = humanBoard.filter(cell => cell !== null).length;
+
+    expect(humanOccupiedCells).toBe(0);
+});
+
+test("places the same ship objects from the fleet on the gameboard", () => {
+    const player = Player("human");
+
+    player.randomPlaceShips();
+
+    const flatBoard = player.gameboard.cells.flat();
+    const occupiedCells = flatBoard.filter(cell => cell !== null);
+
+    expect(
+        player.fleet.every((boat) => occupiedCells.includes(boat))
+    ).toBe(true);
 });

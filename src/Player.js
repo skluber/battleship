@@ -53,7 +53,7 @@ const Player = (type) => {
                         this.gameboard.placeShip(boat, [x, y], orientations[randomIndex]);
                         placed = true;
                     } catch {
-                        placed = false;
+                        // Continue placed = false
                     }
                 }
             });

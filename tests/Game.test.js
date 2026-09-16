@@ -89,14 +89,6 @@ test("player hits opponent board and changes turn", () => {
     expect(game.currentTurn).toBe(game.computerPlayer);
 });
 
-test("does not switch turn when the game is over", () => {
-    const game = Game();
-    jest.spyOn(game, "getWinner").mockReturnValue(game.currentTurn);
-
-    game.playRound([2, 2]);
-    expect(game.currentTurn).toBe(game.humanPlayer);
-});
-
 test("computer attacks randomly after the human turn", () => {
     const game = Game();
 
@@ -114,4 +106,14 @@ test("human receives feedback after the attack (water or hit)", () => {
     const result = game.playRound([2, 2]);
     
     expect(["Water", "Hit"]).toContain(result);
+});
+
+test("does not allow playing after the game is over", () => {
+    const game = Game();
+
+    jest.spyOn(game, "getWinner").mockReturnValue(game.humanPlayer);
+
+    expect(() => {
+        game.playRound([2, 2]);
+    }).toThrow();
 });

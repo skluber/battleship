@@ -30,6 +30,7 @@ const Game = () => {
         },
 
         playRound(coordinates) {
+            if (this.getWinner() !== null) throw new Error("Game is over");
             const opponent = this.currentTurn === humanPlayer ? computerPlayer : humanPlayer;
             let result;
 

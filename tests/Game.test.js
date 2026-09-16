@@ -1,6 +1,7 @@
 import { Game } from "../src/Game.js";
 import { jest } from "@jest/globals";
 import { Player } from "../src/Player.js";
+import expect from "expect";
 
 test("creates a game with two players", () => {
     const game = Game();
@@ -77,4 +78,33 @@ test("places the same ship objects from the fleet on the gameboard", () => {
     expect(
         player.fleet.every((boat) => occupiedCells.includes(boat))
     ).toBe(true);
+});
+
+test("player hits opponent board and changes turn", () => {
+    const game = Game();
+
+    game.playRound([2, 2]);
+
+    expect(game.computerPlayer.gameboard.attacked[2][2]).toBe(true);
+    expect(game.currentTurn).toBe(game.computerPlayer);
+});
+
+test("does not switch turn when the game is over", () => {
+    const game = Game();
+    jest.spyOn(game, "getWinner").mockReturnValue(game.currentTurn);
+
+    game.playRound([2, 2]);
+    expect(game.currentTurn).toBe(game.humanPlayer);
+});
+
+test("computer attacks randomly after the human turn", () => {
+    const game = Game();
+
+    game.playRound([2, 2]);
+    expect(game.currentTurn).toBe(game.computerPlayer);
+
+    game.playRound();
+    expect(game.currentTurn).toBe(game.humanPlayer);
+    const attackedCells = game.humanPlayer.gameboard.attacked.flat();
+    expect(attackedCells.filter(cell => cell === true)).toHaveLength(1);
 });

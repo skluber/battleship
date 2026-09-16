@@ -118,5 +118,4 @@ test("places the entire fleet randomly on the gameboard", () => {
 
     // All boats means 17 not null cells
     expect(totalBoatCells).toBe(17)
-
 });

@@ -34,6 +34,8 @@ const Player = (type) => {
                 result = this.attack(enemy, [x, y]);
 
             } while (result === "Already attacked");
+
+            return result;
         },
 
         randomPlaceShips() {

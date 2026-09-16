@@ -29,19 +29,21 @@ const Game = () => {
             return null;
         },
 
-        playRound([x, y] = [0, 0]) {
+        playRound(coordinates) {
             const opponent = this.currentTurn === humanPlayer ? computerPlayer : humanPlayer;
+            let result;
 
             if (this.currentTurn === humanPlayer) {
-                this.currentTurn.attack(opponent.gameboard, [x, y]);
+                result = this.currentTurn.attack(opponent.gameboard, coordinates);
             } else {
-                this.currentTurn.randomAttack(opponent.gameboard);
+                result = this.currentTurn.randomAttack(opponent.gameboard);
             }
 
             if (this.getWinner() === null) {
                 this.switchTurn();
-                
-            }
+            }   
+
+            return result;
         }
     }
 }

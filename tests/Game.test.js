@@ -108,3 +108,10 @@ test("computer attacks randomly after the human turn", () => {
     const attackedCells = game.humanPlayer.gameboard.attacked.flat();
     expect(attackedCells.filter(cell => cell === true)).toHaveLength(1);
 });
+
+test("human receives feedback after the attack (water or hit)", () => {
+    const game = Game();
+    const result = game.playRound([2, 2]);
+    
+    expect(["Water", "Hit"]).toContain(result);
+});

@@ -41,6 +41,10 @@ const Game = () => {
                 result = this.currentTurn.randomAttack(opponent.gameboard);
             }
 
+            if (result === "Already attacked") {
+                return result;
+            }
+
             if (this.getWinner() === null) {
                 this.switchTurn();
             }   

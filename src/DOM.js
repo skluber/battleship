@@ -17,24 +17,11 @@ function renderGameboard(gameboard, showShips) {
                     cell.classList.add("miss");
                 }
             } else {
-                if (showShips) {
-                    if (gameboard.attacked[y][x]) {
-                        cell.classList.add("hit");
-                    } else if (showShips) {
-                        cell.classList.add("ship");
-                    }
-
-
-                    if (gameboard.attacked[y][x]) {
-                        cell.classList.add("hit");
-                    } else {
-                        cell.classList.add("ship");
-                    }
-                } else {
-                    if (gameboard.attacked[y][x]) {
-                        cell.classList.add("hit");
-                    }
-                }  
+                if (gameboard.attacked[y][x]) {
+                    cell.classList.add("hit");
+                } else if (showShips) {
+                    cell.classList.add("ship");
+                }
             }
 
             board.appendChild(cell);

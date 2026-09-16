@@ -108,7 +108,7 @@ test("human receives feedback after the attack (water or hit)", () => {
     expect(["Water", "Hit"]).toContain(result);
 });
 
-test("does not allow playing after the game is over", () => {
+test("doesn't allow playing after the game is over", () => {
     const game = Game();
 
     jest.spyOn(game, "getWinner").mockReturnValue(game.humanPlayer);

@@ -119,3 +119,34 @@ test("places the entire fleet randomly on the gameboard", () => {
     // All boats means 17 not null cells
     expect(totalBoatCells).toBe(17)
 });
+
+test("player can place a ship from their fleet", () => {
+    const player = Player("human");
+    const ship = player.fleet[0];
+
+    player.placeShip(ship, [2, 2], "horizontal");
+
+    expect(player.gameboard.cells[2][2]).toBe(ship);
+});
+
+test("doesn't allow placing the same ship twice", () => {
+    const player = Player("human");
+    const ship = player.fleet[0];
+
+    player.placeShip(ship, [2, 2], "horizontal");
+
+    expect(() => {
+        player.placeShip(ship, [5, 5], "horizontal");
+    }).toThrow();
+});
+
+test("doesn't allow placing enemy ships as his own", () => {
+    const player = Player("human");
+    const opponent = Player("computer");
+
+    const opponentShip = opponent.fleet[0];
+
+    expect(() => {
+        player.placeShip(opponentShip, [5, 5], "horizontal");
+    }).toThrow();
+});

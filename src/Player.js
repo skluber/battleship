@@ -59,7 +59,18 @@ const Player = (type) => {
                     }
                 }
             });
+        },
 
+        placeShip(ship, position, orientation) {
+            if (this.gameboard.ships.includes(ship)) {
+                throw new Error("Ship already placed on gameboard");
+            }
+
+            if (this.fleet.includes(ship)) {
+                this.gameboard.placeShip(ship, position, orientation);
+            } else {
+                throw new Error("Ship not found")
+            }
         }
     };
 };

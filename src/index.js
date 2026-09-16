@@ -6,8 +6,8 @@ const game = Game();
 
 const playerBoard = document.querySelector("#player-board");
 const computerBoard = document.querySelector("#enemy-board");
-
-game.humanPlayer.randomPlaceShips();
+const gameStatus = document.querySelector("#game-status");
+let waitingForComputer = false;
 
 function renderGame() {
     playerBoard.innerHTML = "";
@@ -17,21 +17,53 @@ function renderGame() {
     computerBoard.appendChild(renderGameboard(game.computerPlayer.gameboard, false));
 }
 
+function updateGameStatus(result, from) {
+    let message = "";
+    const user = from === game.humanPlayer ? "You" : "Computer";
+
+    switch (result) {
+        case "Hit":
+            message = `${user} hit a ship!`;
+            break;
+        
+        case "Water":
+            message = `${user} missed.`;
+            break;
+
+        case "Already attacked":
+            message = `${user} already attacked that cell.`;
+            break;
+
+        default:
+            message = "Cannot read that status";
+    }
+
+    gameStatus.textContent = message;
+}
+
+game.humanPlayer.randomPlaceShips();
 renderGame();   
 
 computerBoard.addEventListener("click", (event) => {
-    if (event.target.classList.contains("cell")) {
-        if (game.currentTurn === game.humanPlayer) {
-            const x = parseInt(event.target.dataset.x, 10);
-            const y = parseInt(event.target.dataset.y, 10);
+    if (!waitingForComputer) {
+        if (event.target.classList.contains("cell")) {
+            if (game.currentTurn === game.humanPlayer) {
+                const x = parseInt(event.target.dataset.x, 10);
+                const y = parseInt(event.target.dataset.y, 10);
 
-            game.playRound([x, y]);
-            
-            if (game.currentTurn === game.computerPlayer) {
-                game.playRound();
+                updateGameStatus(game.playRound([x, y]), game.humanPlayer);
+                renderGame();
+                waitingForComputer = true;
+                
+                setTimeout(() => {
+                    if (game.currentTurn === game.computerPlayer) {
+                        updateGameStatus(game.playRound(), game.computerPlayer);
+                        waitingForComputer = false;
+                    }
+                    renderGame();
+                }, 800);
+                
             }
-
-            renderGame();
         }
-    }
+    }    
 });

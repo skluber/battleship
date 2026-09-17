@@ -10,11 +10,13 @@ const gameStatus = document.querySelector("#game-status");
 let waitingForComputer = false;
 
 function renderGame() {
+    const revealShips = game.getWinner() === game.computerPlayer;
+
     playerBoard.innerHTML = "";
     playerBoard.appendChild(renderGameboard(game.humanPlayer.gameboard, true));
 
     computerBoard.innerHTML = "";
-    computerBoard.appendChild(renderGameboard(game.computerPlayer.gameboard, false));
+    computerBoard.appendChild(renderGameboard(game.computerPlayer.gameboard, revealShips));
 }
 
 function updateGameStatus(result, from) {

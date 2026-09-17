@@ -14,7 +14,7 @@ function renderGame() {
     playerBoard.appendChild(renderGameboard(game.humanPlayer.gameboard, true));
 
     computerBoard.innerHTML = "";
-    computerBoard.appendChild(renderGameboard(game.computerPlayer.gameboard, false));
+    computerBoard.appendChild(renderGameboard(game.computerPlayer.gameboard, true));
 }
 
 function updateGameStatus(result, from) {
@@ -34,6 +34,16 @@ function updateGameStatus(result, from) {
             message = `${user} already attacked that cell.`;
             break;
 
+        case "Victory":
+            if (from === game.humanPlayer) {
+                message = `Congratulations! You sank all enemy ships!`;
+            }
+
+            if (from === game.computerPlayer) {
+                message = `Game over. The computer sank all your ships.`;
+            }
+            break;
+
         default:
             message = "Cannot read that status";
     }
@@ -51,19 +61,45 @@ computerBoard.addEventListener("click", (event) => {
                 const x = parseInt(event.target.dataset.x, 10);
                 const y = parseInt(event.target.dataset.y, 10);
 
-                updateGameStatus(game.playRound([x, y]), game.humanPlayer);
-                renderGame();
-                waitingForComputer = true;
-                
-                setTimeout(() => {
-                    if (game.currentTurn === game.computerPlayer) {
-                        updateGameStatus(game.playRound(), game.computerPlayer);
-                        waitingForComputer = false;
-                    }
+                if (game.getWinner() === null) {
+                    const result = game.playRound([x, y]);
+                    
+                    updateGameStatus(result, game.humanPlayer);
                     renderGame();
-                }, 800);
-                
+
+                    if (result === "Already attacked") {
+                        return;
+                    }
+                    
+                    waitingForComputer = true;
+                } else {
+                    updateGameStatus("Victory", game.getWinner());
+                    return;
+                }
+
+                setTimeout(() => {
+                    if (
+                        game.currentTurn === game.computerPlayer &&
+                        game.getWinner() === null
+                    ) {
+                        updateGameStatus(
+                            game.playRound(),
+                            game.computerPlayer
+                        );
+                        waitingForComputer = false;
+                        renderGame();
+                    }
+
+                    const winner = game.getWinner();
+
+                    if (winner !== null) {
+                        updateGameStatus("Victory", winner);
+                        waitingForComputer = false;
+                        renderGame();
+                        return;
+                    }
+                }, 100);
             }
         }
-    }    
+    }
 });

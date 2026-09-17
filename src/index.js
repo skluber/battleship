@@ -14,7 +14,7 @@ function renderGame() {
     playerBoard.appendChild(renderGameboard(game.humanPlayer.gameboard, true));
 
     computerBoard.innerHTML = "";
-    computerBoard.appendChild(renderGameboard(game.computerPlayer.gameboard, true));
+    computerBoard.appendChild(renderGameboard(game.computerPlayer.gameboard, false));
 }
 
 function updateGameStatus(result, from) {
@@ -93,7 +93,7 @@ computerBoard.addEventListener("click", (event) => {
 
     setTimeout(() => {
         playComputerTurn();
-    }, 100);
+    }, 500);
 });
 
 function playComputerTurn() {

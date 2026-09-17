@@ -13,10 +13,13 @@ const Player = (type) => {
         return Ship(boat.name, boat.length)
     }) 
 
+    const targetQueue = [];
+
     return {
         gameboard: Gameboard(),
         type,
         fleet: playerFleet,
+        
 
         attack(enemy, [x,y]) {
             return enemy.receiveAttack([x,y]);
@@ -28,10 +31,27 @@ const Player = (type) => {
             let result = null;
 
             do {
-                const x = Math.floor(Math.random() * 10);
-                const y = Math.floor(Math.random() * 10);
+                if (targetQueue.length > 0) {
+                    const possibleTarget = targetQueue.shift();
+                    const x = possibleTarget[0];
+                    const y = possibleTarget[1];
 
-                result = this.attack(enemy, [x, y]);
+                    result = this.attack(enemy, [x, y]);
+
+                    if (result === "Hit") {
+                        this.addTargets(enemy, [x, y]);
+                    }
+
+                } else {
+                    const x = Math.floor(Math.random() * 10);
+                    const y = Math.floor(Math.random() * 10);
+
+                    result = this.attack(enemy, [x, y]);
+
+                    if (result === "Hit") {
+                        this.addTargets(enemy, [x, y]);
+                    }
+                }
 
             } while (result === "Already attacked");
 
@@ -71,6 +91,48 @@ const Player = (type) => {
             } else {
                 throw new Error("Ship not found")
             }
+        },
+
+        getAdjacentCells(enemyboard, [x, y]) {
+            const result = [];
+
+            if ((x + 1 >= 0) && (x + 1 <= 9)) {
+                if (!enemyboard.attacked[y][x + 1]) {
+                    result.push([ x + 1, y ])
+                }
+            }
+
+            if ((x - 1 >= 0) && (x - 1 <= 9)) {
+                if (!enemyboard.attacked[y][x - 1]) {
+                    result.push([ x - 1, y ])
+                }
+            }
+
+            if ((y + 1 >= 0) && (y + 1 <= 9)) {
+                if (!enemyboard.attacked[y + 1][x]) {
+                    result.push([ x , y + 1 ])
+                }
+            }
+
+            if ((y - 1 >= 0) && (y - 1 <= 9)) {
+                if (!enemyboard.attacked[y - 1][x]) {
+                    result.push([ x , y - 1 ])
+                }
+            }
+
+            return result;
+        },
+
+        addTargets(enemy, [x, y]) {
+            console.log("Queue before:", targetQueue);
+
+            this.getAdjacentCells(enemy, [x, y]).forEach((coordinate) => {
+                if (!targetQueue.some(option => option[0] === coordinate[0] && option[1] === coordinate[1])) {
+                    targetQueue.push(coordinate);
+                    }
+            });
+
+            console.log("Queue after:", targetQueue);   
         }
     };
 };

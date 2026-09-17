@@ -55,51 +55,59 @@ game.humanPlayer.randomPlaceShips();
 renderGame();   
 
 computerBoard.addEventListener("click", (event) => {
-    if (!waitingForComputer) {
-        if (event.target.classList.contains("cell")) {
-            if (game.currentTurn === game.humanPlayer) {
-                const x = parseInt(event.target.dataset.x, 10);
-                const y = parseInt(event.target.dataset.y, 10);
-
-                if (game.getWinner() === null) {
-                    const result = game.playRound([x, y]);
-                    
-                    updateGameStatus(result, game.humanPlayer);
-                    renderGame();
-
-                    if (result === "Already attacked") {
-                        return;
-                    }
-                    
-                    waitingForComputer = true;
-                } else {
-                    updateGameStatus("Victory", game.getWinner());
-                    return;
-                }
-
-                setTimeout(() => {
-                    if (
-                        game.currentTurn === game.computerPlayer &&
-                        game.getWinner() === null
-                    ) {
-                        updateGameStatus(
-                            game.playRound(),
-                            game.computerPlayer
-                        );
-                        waitingForComputer = false;
-                        renderGame();
-                    }
-
-                    const winner = game.getWinner();
-
-                    if (winner !== null) {
-                        updateGameStatus("Victory", winner);
-                        waitingForComputer = false;
-                        renderGame();
-                        return;
-                    }
-                }, 100);
-            }
-        }
+    if (waitingForComputer) {
+        return;
     }
+
+    if (!event.target.classList.contains("cell")) {
+        return;
+    }
+
+    if (game.currentTurn !== game.humanPlayer) {
+        return;
+    }
+
+    const x = parseInt(event.target.dataset.x, 10);
+    const y = parseInt(event.target.dataset.y, 10);
+    let winner = game.getWinner();
+
+    if (winner !== null) {
+        updateGameStatus("Victory", winner);
+        return;
+    }
+
+    const result = game.playRound([x, y]);
+
+    updateGameStatus(result, game.humanPlayer);
+    renderGame();
+
+    if (result === "Already attacked") {
+        return;
+    }
+
+    waitingForComputer = true;
+
+    setTimeout(() => {
+        winner = game.getWinner();
+
+        if (
+            game.currentTurn === game.computerPlayer &&
+            winner === null
+        ) {
+            const computerResult = game.playRound();
+
+            updateGameStatus(computerResult, game.computerPlayer);
+            waitingForComputer = false;
+            renderGame();
+        }
+
+        winner = game.getWinner();
+
+        if (winner !== null) {
+            updateGameStatus("Victory", winner);
+            waitingForComputer = false;
+            renderGame();
+            return;
+        }
+    }, 100);
 });

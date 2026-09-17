@@ -51,6 +51,10 @@ function updateGameStatus(result, from) {
     gameStatus.textContent = message;
 }
 
+function disableEnemyBoard() {
+    computerBoard.classList.add("disabled");
+}
+
 game.humanPlayer.randomPlaceShips();
 renderGame();   
 
@@ -88,26 +92,38 @@ computerBoard.addEventListener("click", (event) => {
     waitingForComputer = true;
 
     setTimeout(() => {
-        winner = game.getWinner();
-
-        if (
-            game.currentTurn === game.computerPlayer &&
-            winner === null
-        ) {
-            const computerResult = game.playRound();
-
-            updateGameStatus(computerResult, game.computerPlayer);
-            waitingForComputer = false;
-            renderGame();
-        }
-
-        winner = game.getWinner();
-
-        if (winner !== null) {
-            updateGameStatus("Victory", winner);
-            waitingForComputer = false;
-            renderGame();
-            return;
-        }
+        playComputerTurn();
     }, 100);
 });
+
+function playComputerTurn() {
+    const winner = game.getWinner();
+
+    if (winner !== null) {
+        handleGameOver(winner);
+        return;
+    }
+
+    if (game.currentTurn !== game.computerPlayer) {
+        return;
+    }
+
+    const computerResult = game.playRound();
+
+    updateGameStatus(computerResult, game.computerPlayer);
+    waitingForComputer = false;
+    renderGame();
+
+    const winnerAfterAttack = game.getWinner();
+
+    if (winnerAfterAttack !== null) {
+        handleGameOver(winnerAfterAttack);
+    }
+}
+
+function handleGameOver(winner) {
+    updateGameStatus("Victory", winner);
+    disableEnemyBoard();
+    waitingForComputer = false;
+    renderGame();
+}

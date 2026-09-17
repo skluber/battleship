@@ -62,6 +62,11 @@ section[aria-label="Game boards"] {
     background: lightblue;
 }
 
+#enemy-board.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
 footer {
     width: min(100% - 2rem, 1200px);
     margin-inline: auto;

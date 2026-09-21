@@ -1,4 +1,5 @@
 name: Deploy Battleship
+# Deploy the generated dist folder to GitHub Pages
 
 on:
   push:
